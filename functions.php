@@ -33,7 +33,7 @@ function getConnection()
     $host = 'localhost'; // Replace with your host
     $dbName = 'dct-ccs-finals'; // Replace with your database name
     $username = 'root'; // Replace with your username
-    $password = 'admin'; // Replace with your password
+    $password = ''; // Replace with your password
     $charset = 'utf8mb4'; // Recommended for UTF-8 support
 
     try {
