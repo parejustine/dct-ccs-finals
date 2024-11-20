@@ -1,43 +1,37 @@
-/* General Styles for the Dashboard */
-
 .bd-placeholder-img {
-    font-size: 1.125rem; /* Font size for placeholder text */
-    text-anchor: middle; /* Center the text */
-    -webkit-user-select: none; /* Prevent selection on WebKit-based browsers */
-    -moz-user-select: none; /* Prevent selection on Firefox */
-    user-select: none; /* Prevent selection on all browsers */
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
 }
 
 @media (min-width: 768px) {
     .bd-placeholder-img-lg {
-        font-size: 3.5rem; /* Increase font size for large screens */
+        font-size: 3.5rem;
     }
 }
 
-/* Divider for sections */
 .b-example-divider {
-    width: 100%; /* Full width divider */
-    height: 3rem; /* Height of the divider */
-    background-color: rgba(0, 0, 0, .1); /* Light background */
-    border: solid rgba(0, 0, 0, .15); /* Border color */
-    border-width: 1px 0; /* Border at top and bottom */
-    box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15); /* Inner shadow for depth */
+    width: 100%;
+    height: 3rem;
+    background-color: rgba(0, 0, 0, .1);
+    border: solid rgba(0, 0, 0, .15);
+    border-width: 1px 0;
+    box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
 }
 
-/* Vertical divider */
 .b-example-vr {
-    flex-shrink: 0; /* Prevent shrinking */
-    width: 1.5rem; /* Width of the vertical divider */
-    height: 100vh; /* Full viewport height */
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 100vh;
 }
 
-/* Icon styling */
 .bi {
-    vertical-align: -.125em; /* Align icons properly with text */
-    fill: currentColor; /* Set icon color to match text color */
+    vertical-align: -.125em;
+    fill: currentColor;
 }
 
-/* Navbar styles */
 .nav-scroller {
     position: relative;
     z-index: 2;
@@ -50,107 +44,84 @@
     flex-wrap: nowrap;
     padding-bottom: 1rem;
     margin-top: -1px;
-    overflow-x: auto; /* Horizontal scroll if needed */
+    overflow-x: auto;
     text-align: center;
-    white-space: nowrap; /* Prevent text wrapping */
-    -webkit-overflow-scrolling: touch; /* Smooth scroll for touch devices */
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
 }
 
-/* Primary button styling */
 .btn-bd-primary {
-    --bd-violet-bg: #712cf9; /* Custom background color */
-    --bd-violet-rgb: 112.520718, 44.062154, 249.437846; /* RGB values for hover effects */
-    
-    --bs-btn-font-weight: 600; /* Bold font */
-    --bs-btn-color: var(--bs-white); /* White text color */
-    --bs-btn-bg: var(--bd-violet-bg); /* Custom background color */
-    --bs-btn-border-color: var(--bd-violet-bg); /* Border color */
-    --bs-btn-hover-color: var(--bs-white); /* Hover text color */
-    --bs-btn-hover-bg: #6528e0; /* Hover background color */
-    --bs-btn-hover-border-color: #6528e0; /* Hover border color */
-    --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb); /* Focus shadow color */
-    --bs-btn-active-color: var(--bs-btn-hover-color); /* Active button text color */
-    --bs-btn-active-bg: #5a23c8; /* Active background color */
-    --bs-btn-active-border-color: #5a23c8; /* Active border color */
+    --bd-violet-bg: #712cf9;
+    --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+
+    --bs-btn-font-weight: 600;
+    --bs-btn-color: var(--bs-white);
+    --bs-btn-bg: var(--bd-violet-bg);
+    --bs-btn-border-color: var(--bd-violet-bg);
+    --bs-btn-hover-color: var(--bs-white);
+    --bs-btn-hover-bg: #6528e0;
+    --bs-btn-hover-border-color: #6528e0;
+    --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+    --bs-btn-active-color: var(--bs-btn-hover-color);
+    --bs-btn-active-bg: #5a23c8;
+    --bs-btn-active-border-color: #5a23c8;
 }
 
-/* Toggle button styles */
 .bd-mode-toggle {
-    z-index: 1500; /* Ensure the toggle button appears above other content */
+    z-index: 1500;
 }
 
 .bd-mode-toggle .dropdown-menu .active .bi {
-    display: block !important; /* Force icon display when active */
+    display: block !important;
 }
 
-/* Sidebar Styles */
+.bi {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+}
+
+/*
+   * Sidebar
+   */
+
 @media (min-width: 768px) {
     .sidebar .offcanvas-lg {
-        position: -webkit-sticky; /* Sticky sidebar */
+        position: -webkit-sticky;
         position: sticky;
-        top: 48px; /* Position the sidebar at the top */
+        top: 48px;
     }
 
     .navbar-search {
-        display: block; /* Display the search bar */
+        display: block;
     }
 }
 
-/* Sidebar link styles */
 .sidebar .nav-link {
-    font-size: .875rem; /* Slightly smaller font size for sidebar links */
-    font-weight: 500; /* Medium font weight */
+    font-size: .875rem;
+    font-weight: 500;
 }
 
 .sidebar .nav-link.active {
-    color: #2470dc; /* Blue color for active link */
+    color: #2470dc;
 }
 
-/* Sidebar heading style */
 .sidebar-heading {
-    font-size: .75rem; /* Smaller font size for sidebar headings */
+    font-size: .75rem;
 }
 
-/* Navbar styles */
+/*
+   * Navbar
+   */
+
 .navbar-brand {
     padding-top: .75rem;
     padding-bottom: .75rem;
-    background-color: rgba(0, 0, 0, .25); /* Slight background color */
-    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25); /* Inner shadow for depth */
-    height: 60px !important; /* Fixed height */
+    background-color: rgba(0, 0, 0, .25);
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
+    height: 60px !important;
 }
 
 .navbar .form-control {
-    padding: .75rem 1rem; /* Padding for form control elements in the navbar */
-}
-
-/* Dashboard card styles */
-.card {
-    border-radius: .25rem; /* Rounded corners */
-}
-
-.card-header {
-    font-weight: bold; /* Bold font for card headers */
-    padding: .75rem; /* Padding inside the card header */
-}
-
-/* Card color specific styles */
-.card-body.text-primary {
-    color: #007bff; /* Blue text color for primary cards */
-}
-
-.card-body.text-success {
-    color: #28a745; /* Green text color for success cards */
-}
-
-.card-body.text-danger {
-    color: #dc3545; /* Red text color for danger cards */
-}
-
-.card-body.text-warning {
-    color: #ffc107; /* Yellow text color for warning cards */
-}
-
-.card-body.text-info {
-    color: #17a2b8; /* Info color for informational cards */
+    padding: .75rem 1rem;
 }
