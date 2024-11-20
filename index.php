@@ -1,3 +1,9 @@
+<?php
+require 'functions.php';
+guardLogin();
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,11 +17,26 @@
 <body class="bg-secondary-subtle">
     <div class="d-flex align-items-center justify-content-center vh-100">
         <div class="col-3">
+            <?php
+
+            if ($_SERVER['REQUEST_METHOD'] == "POST") {
+                $email = postData("email");
+                $password = postData("password");
+                $button = postData("login");
+            }
+
+            if (isset($button)) {
+                login($email, $password);
+            }
+
+
+            ?>
+
             <!-- Server-Side Validation Messages should be placed here -->
             <div class="card">
                 <div class="card-body">
                     <h1 class="h3 mb-4 fw-normal">Login</h1>
-                    <form method="post" action="">
+                    <form method="post">
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="email" name="email" placeholder="user1@example.com">
                             <label for="email">Email address</label>
