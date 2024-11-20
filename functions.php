@@ -1,4 +1,3 @@
-
 <?php
 // All project functions should be placed here
 
@@ -131,6 +130,7 @@ function displayErrors($errors = [])
 
     return $errorHtml;
 }
+// ******************************************************************
 
 // Logout Fuction
 function logout($indexPage)
@@ -144,4 +144,123 @@ function logout($indexPage)
     // Redirect to the login page (index.php)
     header("Location: $indexPage");
     exit;
+}
+// ************************************************************************
+
+// Subject
+function isPost()
+{
+    return $_SERVER['REQUEST_METHOD'] == "POST";
+}
+
+function addSubject($subject_code, $subject_name)
+{
+
+    // Get database connection
+    $conn = getConnection();
+
+    try {
+        // Prepare SQL query to insert subject into the database
+        $sql = "INSERT INTO subjects (subject_code, subject_name) VALUES (:subject_code, :subject_name)";
+        $stmt = $conn->prepare($sql);
+
+        // Bind parameters to the SQL query
+        $stmt->bindParam(':subject_code', $subject_code);
+        $stmt->bindParam(':subject_name', $subject_name);
+
+        // Execute the query
+        if ($stmt->execute()) {
+            return true; // Subject successfully added
+        } else {
+            return "Failed to add subject."; // Query execution failed
+        }
+    } catch (PDOException $e) {
+        // Return error message if the query fails
+        return "Error: " . $e->getMessage();
+    }
+}
+
+function fetchSubjects()
+{
+    // Get the database connection
+    $conn = getConnection();
+
+    try {
+        // Prepare SQL query to fetch all subjects
+        $sql = "SELECT * FROM subjects";
+        $stmt = $conn->prepare($sql);
+
+        // Execute the query
+        $stmt->execute();
+
+        // Fetch all subjects as an associative array
+        $subjects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Return the list of subjects
+        return $subjects;
+    } catch (PDOException $e) {
+        // Return an empty array in case of error
+        return [];
+    }
+}
+
+
+function EditSubject($subject_code, $subject_name, $redirectPage)
+{
+
+    try {
+        // Get the database connection
+        $pdo = getConnection();
+
+        // Prepare the SQL query for updating the subject
+        $sql = "UPDATE subjects SET subject_name = :subject_name WHERE subject_code = :subject_code";
+        $stmt = $pdo->prepare($sql);
+
+        // Bind the parameters
+        $stmt->bindParam(':subject_name', $subject_name, PDO::PARAM_STR);
+        $stmt->bindParam(':subject_code', $subject_code, PDO::PARAM_STR);
+
+        // Execute the query
+        if ($stmt->execute()) {
+            echo "<script>window.location.href = '$redirectPage';</script>";
+        } else {
+            //echo displayErrors(["Failed to update subject!"]);
+            return 'Failed to update subject';
+        }
+    } catch (PDOException $e) {
+        // echo displayErrors(["Error: " . $e->getMessage()]);
+        return "Error: " . $e->getMessage();
+    }
+}
+function getSubjectCode($subject_code)
+{
+    $pdo = getConnection();
+    $query = "SELECT * FROM subjects WHERE subject_code = :subject_code";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute([':subject_code' => $subject_code]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+function deleteSubject($subject_code, $redirectPage)
+{
+    try {
+        // Get the database connection
+        $pdo = getConnection();
+
+        // Prepare the SQL query to delete the subject
+        $sql = "DELETE FROM subjects WHERE subject_code = :subject_code";
+        $stmt = $pdo->prepare($sql);
+
+        // Bind the parameter
+        $stmt->bindParam(':subject_code', $subject_code, PDO::PARAM_STR);
+
+        // Execute the query
+        if ($stmt->execute()) {
+            echo "<script>window.location.href = '$redirectPage';</script>";
+        } else {
+            return "Failed to delete the subject with code $subject_code.";
+        }
+    } catch (PDOException $e) {
+        return "Error: " . $e->getMessage();
+    }
 }
