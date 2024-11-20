@@ -1,16 +1,17 @@
-
 <?php
 // All project functions should be placed here
 
 session_start();
+
+// Utility function to get POST data
 function postData($key)
 {
-    return $_POST["$key"];
+    return isset($_POST[$key]) ? $_POST[$key] : null;
 }
 
+// Guard functions
 function guardLogin()
 {
-
     $dashboardPage = 'admin/dashboard.php';
 
     if (isset($_SESSION['email'])) {
@@ -26,15 +27,14 @@ function guardDashboard()
     }
 }
 
-
+// Database connection function
 function getConnection()
 {
-    // Database configuration
-    $host = 'localhost'; // Replace with your host
-    $dbName = 'dct-ccs-finals'; // Replace with your database name
-    $username = 'root'; // Replace with your username
-    $password = ''; // Replace with your password
-    $charset = 'utf8mb4'; // Recommended for UTF-8 support
+    $host = 'localhost'; 
+    $dbName = 'dct-ccs-finals'; 
+    $username = 'root'; 
+    $password = ''; 
+    $charset = 'utf8mb4'; 
 
     try {
         $dsn = "mysql:host=$host;dbname=$dbName;charset=$charset";
@@ -49,6 +49,7 @@ function getConnection()
     }
 }
 
+// Login function
 function login($email, $password)
 {
     $validateLogin = validateLoginCredentials($email, $password);
@@ -58,41 +59,29 @@ function login($email, $password)
         return;
     }
 
-
-    // Get database connection
     $conn = getConnection();
-
-    // Convert the input password to MD5
     $hashedPassword = md5($password);
 
-    // SQL query to check if the email and hashed password match
     $query = "SELECT * FROM users WHERE email = :email AND password = :password";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':email', $email);
     $stmt->bindParam(':password', $hashedPassword);
 
     $stmt->execute();
-
-    // Fetch the user data if found
     $user = $stmt->fetch();
 
     if ($user) {
-        // Login successful
-        // return $user;
         $_SESSION['email'] = $user['email'];
         header("Location: admin/dashboard.php");
     } else {
-        // Login failed
         echo displayErrors(["Invalid email or password"]);
     }
 }
 
-
+// Validate login credentials
 function validateLoginCredentials($email, $password)
 {
-    // Initialize the $errors array
     $errors = [];
-    // Check for empty fields and collect errors
     if (empty($email) && !empty($password)) {
         $errors[] = "Email is required";
         $errors[] = "Invalid password";
@@ -111,7 +100,7 @@ function validateLoginCredentials($email, $password)
     return $errors;
 }
 
-
+// Error display function
 function displayErrors($errors = [])
 {
     if (empty($errors)) return "";
@@ -119,7 +108,6 @@ function displayErrors($errors = [])
     $errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>System Alerts</strong><ul>';
 
     foreach ($errors as $error) {
-        // Ensure $error is a string or handle arrays properly
         if (is_array($error)) {
             $errorHtml .= '<li>' . implode(", ", $error) . '</li>';
         } else {
@@ -132,16 +120,72 @@ function displayErrors($errors = [])
     return $errorHtml;
 }
 
-// Logout Fuction
+// Logout function
 function logout($indexPage)
 {
-    // Unset the 'email' session variable
     unset($_SESSION['email']);
-
-    // Destroy the session
     session_destroy();
-
-    // Redirect to the login page (index.php)
     header("Location: $indexPage");
     exit;
 }
+
+// Add subject functionality
+function addSubject($conn, $code, $name)
+{
+    $sql = "INSERT INTO subjects (subject_code, subject_name) VALUES (:code, :name)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':code', $code);
+    $stmt->bindParam(':name', $name);
+    $stmt->execute();
+}
+
+// Check if subject already exists
+function isDuplicate($conn, $code, $name)
+{
+    $sql = "SELECT * FROM subjects WHERE subject_code = :code OR subject_name = :name";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':code', $code);
+    $stmt->bindParam(':name', $name);
+    $stmt->execute();
+    return $stmt->rowCount() > 0;
+}
+
+// Get all subjects
+function getSubjects($conn)
+{
+    $sql = "SELECT * FROM subjects";
+    return $conn->query($sql);
+}
+
+// Function to handle form submission for adding subjects
+function handleAddSubjectForm()
+{
+    $errors = [];
+    $code = postData('subjectCode');
+    $name = postData('subjectName');
+
+    // Validate the input fields
+    if (empty($code)) {
+        $errors[] = "Subject Code is required";
+    }
+
+    if (empty($name)) {
+        $errors[] = "Subject Name is required";
+    }
+
+    // Check if subject already exists
+    if (empty($errors) && isDuplicate(getConnection(), $code, $name)) {
+        $errors[] = "Duplicate Subject";
+    }
+
+    // If no errors, insert the new subject
+    if (empty($errors)) {
+        addSubject(getConnection(), $code, $name);
+        // Clear the form values after successful insertion
+        $code = "";
+        $name = "";
+    }
+
+    return [$errors, $code, $name];
+}
+?>
