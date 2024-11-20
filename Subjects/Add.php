@@ -1,7 +1,12 @@
 <?php
 require '../functions.php';
 
-session_start();
+// Start the session only if not already started
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Handle form submission
 list($errors, $code, $name) = handleAddSubjectForm();
 ?>
 
@@ -42,11 +47,11 @@ list($errors, $code, $name) = handleAddSubjectForm();
     <form method="POST" action="add.php">
         <div class="mb-3">
             <label for="subjectCode" class="form-label">Subject Code</label>
-            <input type="text" class="form-control" id="subjectCode" name="subjectCode" placeholder="Enter Subject Code" value="<?php echo htmlspecialchars($code); ?>" required oninput="this.value = this.value.replace(/[^0-9]/g, '');" />
+            <input type="text" class="form-control" id="subjectCode" name="subjectCode" placeholder="Enter Subject Code" value="<?php echo htmlspecialchars($code ?? '', ENT_QUOTES, 'UTF-8'); ?>" required oninput="this.value = this.value.replace(/[^0-9]/g, '');" />
         </div>
         <div class="mb-3">
             <label for="subjectName" class="form-label">Subject Name</label>
-            <input type="text" class="form-control" id="subjectName" name="subjectName" placeholder="Enter Subject Name" value="<?php echo htmlspecialchars($name); ?>" required>
+            <input type="text" class="form-control" id="subjectName" name="subjectName" placeholder="Enter Subject Name" value="<?php echo htmlspecialchars($name ?? '', ENT_QUOTES, 'UTF-8'); ?>" required>
         </div>
         <button type="submit" class="btn btn-primary">Add Subject</button>
     </form>

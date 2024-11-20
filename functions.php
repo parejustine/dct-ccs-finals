@@ -1,7 +1,8 @@
 <?php
-// All project functions should be placed here
-
-session_start();
+// Start the session only if not already started
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Utility function to get POST data
 function postData($key)
@@ -16,6 +17,7 @@ function guardLogin()
 
     if (isset($_SESSION['email'])) {
         header("Location: $dashboardPage");
+        exit();
     }
 }
 
@@ -24,6 +26,7 @@ function guardDashboard()
     $loginPage = '../index.php';
     if (!isset($_SESSION['email'])) {
         header("Location: $loginPage");
+        exit();
     }
 }
 
@@ -73,6 +76,7 @@ function login($email, $password)
     if ($user) {
         $_SESSION['email'] = $user['email'];
         header("Location: admin/dashboard.php");
+        exit();
     } else {
         echo displayErrors(["Invalid email or password"]);
     }
@@ -111,7 +115,8 @@ function displayErrors($errors = [])
         if (is_array($error)) {
             $errorHtml .= '<li>' . implode(", ", $error) . '</li>';
         } else {
-            $errorHtml .= '<li>' . htmlspecialchars($error) . '</li>';
+            // Ensure htmlspecialchars is used properly to avoid deprecation warning
+            $errorHtml .= '<li>' . htmlspecialchars($error ?? '', ENT_QUOTES, 'UTF-8') . '</li>';
         }
     }
 
@@ -126,7 +131,7 @@ function logout($indexPage)
     unset($_SESSION['email']);
     session_destroy();
     header("Location: $indexPage");
-    exit;
+    exit();
 }
 
 // Add subject functionality
