@@ -13,7 +13,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center gap-2" href="#">
+                    <a class="nav-link d-flex align-items-center gap-2" href="<?= $subjectPage ?? "#" ?>">
+                        <i class="fa-solid fa-book fa-fw me-2"></i>
                         Subjects
                     </a>
                 </li>
@@ -22,15 +23,15 @@
                         <i class="fa-solid fa-user fa-fw me-2"></i>
                         Students
                     </a>
-                </li>                
+                </li>
             </ul>
-           
+
             <hr class="my-3">
 
             <ul class="nav flex-column mb-auto">
                 <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center gap-2" href="#">
-                    <i class="fa-solid fa-right-to-bracket fa-fw me-2"></i>                        
+                    <a class="nav-link d-flex align-items-center gap-2" href="<?= $logoutPage ?>">
+                        <i class="fa-solid fa-right-to-bracket fa-fw me-2"></i>
                         Logout
                     </a>
                 </li>
