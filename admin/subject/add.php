@@ -22,14 +22,25 @@ include '../partials/side-bar.php';
     <?php
     // Initialize an array to store error messages
     $errors = [];
+    $subject_code = 1001; // Default value
+    $subject_name = ''; // Default values
+
+    // Check for the latest subject code in the database and increment it by 1
+    $latestSubject = fetchLatestSubjectCode();
+    if ($latestSubject) {
+        $subject_code = $latestSubject + 1; // Set subject code to the next available number
+    }
 
     if (isPost()) {
+        // Get the posted data
         $subject_code = postData("subject_code");
         $subject_name = postData("subject_name");
 
         // Validate Subject Code
         if (empty($subject_code)) {
             $errors[] = "Subject code is required.";
+        } elseif (!ctype_digit((string)$subject_code)) {
+            $errors[] = "Subject code must contain only numbers.";
         }
 
         // Validate Subject Name
@@ -37,22 +48,60 @@ include '../partials/side-bar.php';
             $errors[] = "Subject name is required.";
         }
 
+        // Check for duplicate Subject Code
+        if (empty($errors)) {
+            $existingSubject = findSubjectByCode($subject_code);
+            if ($existingSubject) {
+                $errors[] = "Duplicate Subject";
+            }
+        }
+
         // If there are no errors, proceed to add the subject
         if (empty($errors)) {
             $result = addSubject($subject_code, $subject_name);
 
             if ($result === true) {
-                echo "<div class='alert alert-success'>Subject added successfully.</div>";
+                // Increment subject code for next entry
+                $subject_code = $subject_code + 1; // Increment subject code for next use
+                $subject_name = ''; // Clear subject name upon success
             } else {
-                echo "<div class='alert alert-danger'>Error: Unable to add subject. Please try again.</div>";
+                $errors[] = "System Error: Unable to add subject. Please try again.";
             }
         }
     }
+
+    /**
+     * Simulated function to check for duplicate subject codes.
+     * Replace this with actual database query logic.
+     */
+    function findSubjectByCode($subject_code) {
+        // Example: replace with real database query to find subject
+        $allSubjects = fetchSubjects(); // Fetch all subjects
+        foreach ($allSubjects as $subject) {
+            if ($subject['subject_code'] === $subject_code) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Fetch the latest subject code from the database (Simulated function)
+    function fetchLatestSubjectCode() {
+        $subjects = fetchSubjects();
+        $latestCode = 1000; // Default start code
+        foreach ($subjects as $subject) {
+            if ($subject['subject_code'] > $latestCode) {
+                $latestCode = $subject['subject_code'];
+            }
+        }
+        return $latestCode;
+    }
     ?>
 
-    <!-- Display error messages -->
+    <!-- Display error messages at the top -->
     <?php if (!empty($errors)): ?>
         <div class="alert alert-danger">
+            <strong>System Errors:</strong>
             <ul>
                 <?php foreach ($errors as $error): ?>
                     <li><?= htmlspecialchars($error) ?></li>
@@ -66,11 +115,11 @@ include '../partials/side-bar.php';
         <form method="POST">
             <div class="mb-3">
                 <label for="subject_code" class="form-label">Subject Code</label>
-                <input type="text" class="form-control" id="subject_code" name="subject_code" value="<?= htmlspecialchars($subject_code ?? '') ?>">
+                <input type="text" class="form-control" id="subject_code" name="subject_code" value="<?= htmlspecialchars($subject_code) ?>" readonly>
             </div>
             <div class="mb-3">
                 <label for="subject_name" class="form-label">Subject Name</label>
-                <input type="text" class="form-control" id="subject_name" name="subject_name" value="<?= htmlspecialchars($subject_name ?? '') ?>">
+                <input type="text" class="form-control" id="subject_name" name="subject_name" value="<?= htmlspecialchars($subject_name) ?>">
             </div>
             <button type="submit" class="btn btn-primary btn-sm w-100">Add Subject</button>
         </form>
